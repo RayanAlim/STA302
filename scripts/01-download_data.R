@@ -3,6 +3,7 @@
 # Author: Rayan Awad Alim
 # Date: 22 January 2024
 # Contact: rayan.alim@mail.utoronto.ca 
+# Pre-requisites: Install tidyverse and opendatatoronto
 # License: MIT
 
 
@@ -30,6 +31,6 @@ raw_data
 
 
 #### Save data ####
-write_csv(raw_data, "inputs/data/raw_data.csv") 
+write_csv(raw_data, "inputs/data/unedited_data.csv") 
 
          
