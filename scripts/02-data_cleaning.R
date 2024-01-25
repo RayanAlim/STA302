@@ -1,8 +1,8 @@
 #### Preamble ####
 # Purpose: Cleans the raw data to see crime rate per neighborhood and crime type trends over the years
-
 # Author: Rayan Awad Alim
-# Date: 22 January 2024
+# date: today
+# date-format: long
 # Contact: rayan.alim@mail.utoronto.ca
 # License: MIT
 

@@ -5,7 +5,7 @@ author:
 thanks: "Code and data are available at: https://github.com/RayanAlim/Toronto_Crime_Rate_Exploration"
 date: today
 date-format: long
-abstract: "This paper analyzes crime trends in Toronto neighborhoods, highlighting a concerning increase in auto theft and assault rates over the years. It visualizes these trends, identifies areas with the highest crime rates, and suggests implications for further research."
+abstract: "This paper presents an analysis of crime trends in Toronto neighborhoods from 2014 to 2023, focusing on offenses such as Assault, Auto Theft, Breaking and Entering, Robbery, Theft, Homicide, and Shootings. Notably, the study highlights a significant and concerning increase in Auto Theft and Assault rates over this period. Through data visualizations, it identifies areas with the highest crime rates in the city, drawing attention to specific neighborhoods facing these challenges. Importantly, these findings have practical implications for policymakers and law enforcement agencies, emphasizing the need for targeted strategies to address these rising crime rates, ultimately contributing to the safety and well-being of Toronto residents."
 format: pdf
 toc: TRUE
 number-sections: true
@@ -17,49 +17,50 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 
-library(tidyverse)
+library(tidyverse) 
 library(reshape2)
 ```
 
 # Introduction
 
-In this paper, we delve into the landscape of crime within Toronto's neighborhoods, seeking to shed light on significant trends and patterns that have emerged over recent years. Our analysis encompasses a range of criminal offenses, including Assault, Auto Theft, Break and Enter, Robbery, Theft Over, Homicide, and Shootings etc.. The focal result of this exploration is the discernible rise in Auto Theft and Assault rates, which warrants closer examination and consideration.
+Crime within Toronto's neighborhoods is a topic of growing concern, prompting us to embark on a comprehensive analysis of this issue over the years 2014-2023. This study uses R statistical language [@r] delves into various criminal offenses, including Assault, Auto Theft, Breaking and Entering, Robbery, Theft, Homicide, and Shootings, with a primary focus on identifying critical trends and patterns that have emerged during this period.
 
-Furthermore, we investigate the distribution of these crimes across Toronto, pinpointing areas with the highest crime rates and identifying potential areas for further research. By using several visualizations, we aim to provide a comprehensive overview of the current state of crime in Toronto, offering insights that may inform policy decisions and future studies in the field.
+One of the most salient findings of this exploration is the concerning increase in Auto Theft and Assault rates, which calls for a closer examination and heightened consideration. Understanding these trends is crucial, not only for residents but also for policymakers and law enforcement agencies tasked with ensuring public safety.
 
-The remainder of this paper is structured as follows: In the next section, we provide details about the data source and variables under consideration. Subsequently, we present our findings, including a discussion of the most noteworthy trends in crime rates. The paper concludes by addressing its limitations and suggesting potential avenues for future research.
+Moreover, our investigation extends to the spatial distribution of these crimes across Toronto, allowing us to pinpoint neighborhoods with the highest crime rates. This geographical perspective provides valuable insights for local authorities to allocate resources efficiently and design targeted strategies to address crime-related challenges.
 
+In the subsequent sections, we will provide a detailed account of our data source and variables under consideration, followed by a presentation of our findings, including a discussion of the most notable crime rate trends. As we conclude, we will also acknowledge the limitations of this study and suggest potential avenues for future research in this critical area.
 
 # Data {#sec-data}
 
 ## Data Source and Context
 
-The dataset used was obtained from Toronto Open Data[1] in this analysis comprises of crime data by Neighbourhood. It includes counts for various criminal offenses, including Assault, Auto Theft, Break and Enter, Robbery, Theft Over, Homicide, and Shooting. Additionally, the dataset incorporates crime rates per 100,000 population, computed using population estimates supplied by Environics Analytics. [1]
+The dataset used was obtained from Toronto Open Data [@opendatatoronto] in this analysis comprises of crime data by Neighbourhood. It includes counts for various criminal offenses, including Assault, Auto Theft, Break and Enter, Robbery, Theft Over, Homicide, and Shooting. Additionally, the dataset incorporates crime rates per 100,000 population, computed using population estimates supplied by Environics Analytics. [@opendatatoronto] The data analysis was done using language R [@rR], with libraries such as tidyverse [@rTidyverse], knitr [@knitr], dplyr [@rDplyr], reader [@rReadr], and ggplot2 [@rGgplot2].
 
 ## Data Summary
 
-Consistent with the standard definition outlined by Statistics Canada (StatsCan), the crime rate is determined as the number of reported crimes per 100,000 population* per annum. This metric serves to facilitate equitable comparisons of crime levels across distinct geographic areas characterized by varying population sizes. In contrast to the raw crime count, the crime rate offers a more impartial assessment of crime trends over time, accounting for fluctuations in regional population figures. Using this data, the averages of each crime was taken for each year as displayed in Table 1. Continuing on for each year from 2014 to 2023.
+Consistent with the standard definition outlined by Statistics Canada [@statcan], the crime rate is determined as the number of reported crimes per 100,000 population\* per annum. In contrast to the raw crime count, the crime rate offers a more impartial assessment of crime trends over time, accounting for fluctuations in regional population figures. Using this data, the averages of each crime count was taken for each year as displayed in Table 1. Continuing on for each year from 2014 to 2023.
 
-| Crime Type         | 2014  | 2015  |  '' | 2019  | 2020  | 2021  | 2022  | 2023  |
-|--------------------|-------|-------|-----|-------|-------|-------|-------|-------|-------|
-| ASSAULT            | 104.62| 113.13|  '' | 130.39| 113.76| 120.33| 133.06| 154.28|
-| AUTOTHEFT          | 22.63 | 20.65 |  '' | 33.44 | 36.27 | 41.64 | 61.15 | 76.03 |
-| BIKETHEFT          | 19.13 | 20.85 |  '' | 23.44 | 24.78 | 19.96 | 18.60 | 19.04 |
-| BREAKENTER         | 45.47 | 43.74 |  '' | 53.41 | 43.76 | 35.89 | 38.21 | 48.30 |
-| HOMICIDE           | 0.37  | 0.37  |  '' | 0.50  | 0.45  | 0.53  | 0.44  | 0.45  |
-| ROBBERY            | 23.22 | 21.97 |  '' | 22.20 | 17.55 | 14.20 | 17.76 | 19.93 |
-| SHOOTING           | 1.12  | 1.82  |  '' | 3.11  | 2.92  | 2.58  | 2.40  | 2.16  |
+|   Crime Type   | 2014   | 2015   | '' | 2019   | 2020   | 2021   | 2022   | 2023   |
+|----------------|--------|--------|----|--------|--------|--------|--------|--------|
+| ASSAULT        | 104.62 | 113.13 | '' | 130.39 | 113.76 | 120.33 | 133.06 | 154.28 |
+| AUTOTHEFT      | 22.63  | 20.65  | '' | 33.44  | 36.27  | 41.64  | 61.15  | 76.03  |
+| BIKETHEFT      | 19.13  | 20.85  | '' | 23.44  | 24.78  | 19.96  | 18.60  | 19.04  |
+| BREAKENTER     | 45.47  | 43.74  | '' | 53.41  | 43.76  | 35.89  | 38.21  | 48.30  |
+| HOMICIDE       | 0.37   | 0.37   | '' | 0.50   | 0.45   | 0.53   | 0.44   | 0.45   |
+| ROBBERY        | 23.22  | 21.97  | '' | 22.20  | 17.55  | 14.20  | 17.76  | 19.93  |
+| SHOOTING       | 1.12   | 1.82   | '' | 3.11   | 2.92   | 2.58   | 2.40   | 2.16   |
 
 : Average crime counts by type over the years. '' represents data for 2016-2018 {#tbl-1}
-
 
 # Results
 
 ## Not all crimes are equal
 
-The average crime counts for different crime types are displayed in Figure 1. Figure 1 provides a visual representation of how crime counts have evolved over the years for different crime types. Auto theft and assault have shown significant increases compared to other crimes.
-```{r}
-#| fig-cap: Average crime count by type over the years
+The average crime counts for different crime types are displayed in Figure 1 \ref{fig-crime-trends}. Figure 1 provides a visual representation of how crime counts have evolved over the years for different crime types. Auto theft and assault have shown significant increases compared to other crimes.
+
+```{r fig-crime-trends}
+#| fig.cap: Average crime count by type over the years
 #| echo: false
 #| warning: false
 
@@ -87,10 +88,13 @@ ggplot(
   ) +
   theme_minimal()
 ```
+Figure 1: Crime count over the years
 
 ## Downtown Danger:
 
-The distribution of total crimes over the years reveals that the Yonge-Bay corridor has the highest crime rate, followed by Kensington-Chinatown and Downtown Yonge East. These findings highlight downtown areas as having higher crime rates in the city.
+The distribution of total crimes over the years reveals that the Yonge-Bay corridor has the highest crime rate, followed by Kensington-Chinatown and Downtown Yonge East. These findings highlight downtown areas as having higher crime rates in the city. [Figure 2]
+
+
 ```{r}
 #| echo: false
 #| eval: true
@@ -121,18 +125,26 @@ ggplot(top_10_most, aes(x = reorder(AREA_NAME, Total_Count), y = Total_Count)) +
 ## Bigger Picture: City-wide crime distribution
 
 ```{r}
-
+n
  
 ```
 
-
-
-
 # Discussion
 
-## Weaknesses and next steps
+## Discussion
 
-Weaknesses and next steps should also be included.Try and explore relationships between crime and other socioeconomic factors, which have been linked in literature and try and apply it to Toronto such as: Education [1], Poverty[], Policing []. As next steps I would want to explore how the relationships between these factors align with crim in neighbourhoods. Another avenue to extend is o cluster crims types together based on similarity and see if any pattern emerge. 
+One of the most striking findings of our study is the significant increase in Auto Theft and Assault rates over the years. Auto theft, in particular, has seen a dramatic rise, with rates almost tripling from 2014 to 2023. This trend raises concerns about the security of personal property and the safety of residents. Policymakers should consider implementing targeted measures to combat this surge in auto theft, such as increased police presence in high-risk areas and public awareness campaigns on vehicle security and also for car manufacturrs to contine to inovate on security and anti-theft features.
 
+Having identified specific neighborhoods with the highest crime rates, notably the Yonge-Bay corridor, Kensington-Chinatown, and Downtown Yonge East. This will be cruicial to further assess possible reasons and also ground work for allocating law enforcement resources effectively. Local authorities may need to focus on enhancing security measures and work with the community on community engagement strategies in these high-crime areas to ensure the safety of residents and visitors.
+
+## Limitations and next steps
+
+While our analysis provides valuable insights, it is essential to acknowledge the limitations of this study. It is informational and analyzes trends; however, deeper exploration is needed to understand the reasons for these crime rates and their distribution, diving deeper into the literature and conducting supplementary studies alongside the data to get a more holistic picture.
+
+Future research should try to explore relationships between socioeconomic factors and crime. Investigating how specific educational programs, poverty alleviation initiatives, and community policing efforts impact crime rates in Toronto neighborhoods would provide a more comprehensive understanding of crime dynamics.
+
+Additionally, conducting spatial analysis can offer deeper insights into crime patterns. Techniques like spatial autocorrelation and hotspot analysis can help identify clusters of high and low crime areas, enabling policymakers to implement geographically targeted interventions.
+
+\newpage
 
 # References

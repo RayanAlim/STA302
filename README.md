@@ -6,7 +6,7 @@ This paper analyzes household income distribution across different neighborhoods
 
 The analysis is conducted through Posit Cloud using "R version 4.3.2 (2023-10-31)
 
-LLM Usage Statement: No LLM's were used in the making of this paper.
+LLM Usage Statement: No LLM's were used in the making of this paper. Utilized the "code refactor" button in RStudio, to align indentations. 
 
 ## File Structure
 
