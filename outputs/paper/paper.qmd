@@ -1,5 +1,5 @@
 ---
-title: "An Analysis of Crime Rates in Toronto Neighbourhoods: from 2014-2023"
+title: "An Analysis of Crime in Toronto Neighbourhoods: from 2014-2023"
 author: 
   - Rayan Awad Alim
 thanks: "Code and data are available at: https://github.com/RayanAlim/Toronto_Crime_Rate_Exploration"
@@ -9,7 +9,7 @@ abstract: "This paper analyzes crime trends in Toronto neighborhoods, highlighti
 format: pdf
 toc: TRUE
 number-sections: true
-bibliography: ref.bib
+bibliography: references.bib
 ---
 
 ```{r}
@@ -111,7 +111,7 @@ top_10_most <- head(crime_data, 10)
 # Bar plot for the top 10 neighborhoods with the most crime counts
 ggplot(top_10_most, aes(x = reorder(AREA_NAME, Total_Count), y = Total_Count)) +
   geom_bar(stat = "identity", fill = "lightsalmon") +
-  labs(title = "Top 10 Neighborhoods with the Most Crime Counts",
+  labs(title = "Top 10 Neighborhoods with the Most Crime",
        x = "Neighborhood",
        y = "Total Count") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -134,9 +134,5 @@ ggplot(top_10_most, aes(x = reorder(AREA_NAME, Total_Count), y = Total_Count)) +
 
 Weaknesses and next steps should also be included.Try and explore relationships between crime and other socioeconomic factors, which have been linked in literature and try and apply it to Toronto such as: Education [1], Poverty[], Policing []. As next steps I would want to explore how the relationships between these factors align with crim in neighbourhoods. Another avenue to extend is o cluster crims types together based on similarity and see if any pattern emerge. 
 
-\newpage
 
 # References
-
-::: {#refs}
-:::
