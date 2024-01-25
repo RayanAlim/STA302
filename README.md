@@ -6,7 +6,7 @@ This paper analyzes household income distribution across different neighborhoods
 
 The analysis is conducted through Posit Cloud using "R version 4.3.2 (2023-10-31)
 
-LLM Usage Statement: No LLM's were used in the making of this paper. Utilized the "code refactor" button in RStudio, to align indentations. 
+LLM Usage Statement: No LLM's were used in the making of this paper. I utilized the "code reformat" button in RStudio, to align indentations. 
 
 ## File Structure
 
@@ -24,4 +24,4 @@ The repo is structured as:
 
 1.  To download the raw datasets, run: `scripts/01-download_data.R` 
 2.  To get the cleaned datasets, run: `scripts/02-data_cleaning.R`
-3.  To generate complete PDF paper, run `outputs/paper/Toronto_Neighbourhood_Crime.qmd`
+3.  To generate complete PDF paper, run `outputs/paper/paper.qmd`

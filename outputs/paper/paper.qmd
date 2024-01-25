@@ -122,13 +122,6 @@ ggplot(top_10_most, aes(x = reorder(AREA_NAME, Total_Count), y = Total_Count)) +
   coord_flip()
 ```
 
-## Bigger Picture: City-wide crime distribution
-
-```{r}
-n
- 
-```
-
 # Discussion
 
 ## Discussion
