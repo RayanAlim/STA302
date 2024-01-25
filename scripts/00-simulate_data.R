@@ -6,11 +6,11 @@
 # Pre-requisites: Install tidyverse library
 # License: MIT
 
+
 #### Workspace setup ####
 library(tidyverse)
 
 #### Simulate data ####
-# Simulate the dataset
 
 set.seed(23) #setting a random seed
 
@@ -39,12 +39,9 @@ simulated_data <- simulate_data()
 # Save the simulated dataset
 write.csv(simulated_data, "inputs/data/simulated_crime_data.csv", row.names = FALSE)
 
-# Show a snippet of the dataset
-head(simulated_data)
 
 
-
-#### Some data Validation tests #### 
+#### Some data validation tests #### 
 
 #Check there are correct number of rows
 if (nrow(simulated_data) != 158) {

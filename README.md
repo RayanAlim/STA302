@@ -2,7 +2,11 @@
 
 ## Overview of Paper
 
-This paper analyzes how houshold income distribution across different neighbourhoods in Toronto. It further dives into the different tpes of crimes(theft, auto-theft assault etc.), to look at the possible relationships between crime rates, crime types and household income level for each neighbourhood.
+This paper analyzes household income distribution across different neighborhoods in Toronto. It further dives into the different types of crimes(theft, auto-theft assault etc.), to look at the possible relationships between crime rates, crime types and household income level for each of Toronto's 158 neighborhoods. Data used was obtained from Toronto Open Data. 
+
+The analysis is conducted through Posit Cloud using "R version 4.3.2 (2023-10-31)
+
+LLM Usage Statement: No LLM's were used in the making of this paper.
 
 ## File Structure
 
