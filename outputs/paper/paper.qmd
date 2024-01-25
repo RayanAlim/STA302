@@ -1,16 +1,15 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "An Analysis of Crime Rates in Toronto Neighbourhoods: from 2014-2023"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Rayan Awad Alim
+thanks: "Code and data are available at: https://github.com/RayanAlim/Toronto_Crime_Rate_Exploration"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This paper analyzes crime trends in Toronto neighborhoods, highlighting a concerning increase in auto theft and assault rates over the years. It visualizes these trends, identifies areas with the highest crime rates, and suggests implications for further research."
 format: pdf
+toc: TRUE
 number-sections: true
-bibliography: references.bib
+bibliography: ref.bib
 ---
 
 ```{r}
@@ -19,120 +18,111 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(reshape2)
 ```
-
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. 
+In this paper, we delve into the landscape of crime within Toronto's neighborhoods, seeking to shed light on significant trends and patterns that have emerged over recent years. Our analysis encompasses a range of criminal offenses, including Assault, Auto Theft, Break and Enter, Robbery, Theft Over, Homicide, and Shootings etc.. The focal result of this exploration is the discernible rise in Auto Theft and Assault rates, which warrants closer examination and consideration.
 
-The remainder of this paper is structured as follows. @sec-data....
+Furthermore, we investigate the distribution of these crimes across Toronto, pinpointing areas with the highest crime rates and identifying potential areas for further research. By using several visualizations, we aim to provide a comprehensive overview of the current state of crime in Toronto, offering insights that may inform policy decisions and future studies in the field.
 
+The remainder of this paper is structured as follows: In the next section, we provide details about the data source and variables under consideration. Subsequently, we present our findings, including a discussion of the most noteworthy trends in crime rates. The paper concludes by addressing its limitations and suggesting potential avenues for future research.
 
 
 # Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+## Data Source and Context
 
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
+The dataset used was obtained from Toronto Open Data[1] in this analysis comprises of crime data by Neighbourhood. It includes counts for various criminal offenses, including Assault, Auto Theft, Break and Enter, Robbery, Theft Over, Homicide, and Shooting. Additionally, the dataset incorporates crime rates per 100,000 population, computed using population estimates supplied by Environics Analytics. [1]
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
+## Data Summary
 
-Talk more about it.
+Consistent with the standard definition outlined by Statistics Canada (StatsCan), the crime rate is determined as the number of reported crimes per 100,000 population* per annum. This metric serves to facilitate equitable comparisons of crime levels across distinct geographic areas characterized by varying population sizes. In contrast to the raw crime count, the crime rate offers a more impartial assessment of crime trends over time, accounting for fluctuations in regional population figures. Using this data, the averages of each crime was taken for each year as displayed in Table 1. Continuing on for each year from 2014 to 2023.
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+| Crime Type         | 2014  | 2015  |  '' | 2019  | 2020  | 2021  | 2022  | 2023  |
+|--------------------|-------|-------|-----|-------|-------|-------|-------|-------|-------|
+| ASSAULT            | 104.62| 113.13|  '' | 130.39| 113.76| 120.33| 133.06| 154.28|
+| AUTOTHEFT          | 22.63 | 20.65 |  '' | 33.44 | 36.27 | 41.64 | 61.15 | 76.03 |
+| BIKETHEFT          | 19.13 | 20.85 |  '' | 23.44 | 24.78 | 19.96 | 18.60 | 19.04 |
+| BREAKENTER         | 45.47 | 43.74 |  '' | 53.41 | 43.76 | 35.89 | 38.21 | 48.30 |
+| HOMICIDE           | 0.37  | 0.37  |  '' | 0.50  | 0.45  | 0.53  | 0.44  | 0.45  |
+| ROBBERY            | 23.22 | 21.97 |  '' | 22.20 | 17.55 | 14.20 | 17.76 | 19.93 |
+| SHOOTING           | 1.12  | 1.82  |  '' | 3.11  | 2.92  | 2.58  | 2.40  | 2.16  |
 
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
-
-analysis_data <- read_csv(here::here("outputs/data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
-```
-
-Talk way more about it. 
-
-
-
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
+: Average crime counts by type over the years. '' represents data for 2016-2018 {#tbl-1}
 
 
 # Results
 
-Our results are summarized in @tbl-modelresults.
+## Not all crimes are equal
 
+The average crime counts for different crime types are displayed in Figure 1. Figure 1 provides a visual representation of how crime counts have evolved over the years for different crime types. Auto theft and assault have shown significant increases compared to other crimes.
 ```{r}
+#| fig-cap: Average crime count by type over the years
 #| echo: false
-#| eval: true
 #| warning: false
-#| message: false
 
-library(rstanarm)
+# Scatter plot showing trend of crime types over the years
 
-first_model <-
-  readRDS(file = here::here("outputs/models/first_model.rds"))
+crime_type_averages <-
+  read_csv(here::here("outputs/data/crime_type_averages.csv"))
+
+ggplot(
+  crime_type_averages,
+  aes(
+    x = as.numeric(Year),
+    y = Average,
+    color = Crime_Type,
+    group = Crime_Type
+  )
+) +
+  geom_point() +
+  geom_line() +
+  labs(
+    title = "Average Crime Count Over the Years",
+    x = "Year",
+    y = "Average Rate",
+    color = "Crime Type"
+  ) +
+  theme_minimal()
 ```
 
+## Downtown Danger:
+
+The distribution of total crimes over the years reveals that the Yonge-Bay corridor has the highest crime rate, followed by Kensington-Chinatown and Downtown Yonge East. These findings highlight downtown areas as having higher crime rates in the city.
 ```{r}
 #| echo: false
 #| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
+#| label: tfig-cap
+#| fig-cap: "10 least safe neighborhoods by total crime count (2014-2023)"
 #| warning: false
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+crime_data_cleaned_neighbourhood <-
+  read_csv(here::here("outputs/data/crime_data_cleaned_neighbourhood.csv"))
+
+# Sort data by Total_Count 
+crime_data <-
+  crime_data_cleaned_neighbourhood[order(crime_data_cleaned_neighbourhood$Total_Count, decreasing = TRUE),]
+
+#10 neighborhoods with the most crime counts
+top_10_most <- head(crime_data, 10)
+
+# Bar plot for the top 10 neighborhoods with the most crime counts
+ggplot(top_10_most, aes(x = reorder(AREA_NAME, Total_Count), y = Total_Count)) +
+  geom_bar(stat = "identity", fill = "lightsalmon") +
+  labs(title = "Top 10 Neighborhoods with the Most Crime Counts",
+       x = "Neighborhood",
+       y = "Total Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_flip()
+```
+
+## Bigger Picture: City-wide crime distribution
+
+```{r}
+
+ 
 ```
 
 
@@ -140,82 +130,13 @@ modelsummary::modelsummary(
 
 # Discussion
 
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+Weaknesses and next steps should also be included.Try and explore relationships between crime and other socioeconomic factors, which have been linked in literature and try and apply it to Toronto such as: Education [1], Poverty[], Policing []. As next steps I would want to explore how the relationships between these factors align with crim in neighbourhoods. Another avenue to extend is o cluster crims types together based on similarity and see if any pattern emerge. 
 
 \newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
-
-
-
-\newpage
-
 
 # References
 
-
+::: {#refs}
+:::

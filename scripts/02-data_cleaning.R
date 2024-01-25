@@ -1,44 +1,98 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw data to see crime rate per neighborhood and crime type trends over the years
+
+# Author: Rayan Awad Alim
+# Date: 22 January 2024
+# Contact: rayan.alim@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
 
 #### Workspace setup ####
 library(tidyverse)
 
-#### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
+crime_data <-
+  read_csv(here::here("inputs/data/unedited_crime_data.csv"))
 
-cleaned_data <-
-  raw_data |>
-  janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
-  mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
-  ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
-  mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
-  ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
-  tidyr::drop_na()
 
-#### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+#### Cleaning Crime data ####
+
+## Get yearly Average for all areas per crime type
+
+# vector of years
+years <-
+  c("2014",
+    "2015",
+    "2016",
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023")
+
+# Create an empty data frame to store the results
+crime_type_averages <-
+  data.frame(Crime_Type = character(),
+             Year = character(),
+             Average = double())
+
+# Loop through each year and each crime type
+for (year in years) {
+  for (crime_type in c(
+    "ASSAULT",
+    "AUTOTHEFT",
+    "BIKETHEFT",
+    "BREAKENTER",
+    "HOMICIDE",
+    "ROBBERY",
+    "SHOOTING",
+    "THEFTFROMMV",
+    "THEFTOVER"
+  )) {
+    column_name <- paste(crime_type, year, sep = "_")
+    average_value <-
+      sum(raw_crime_data[, column_name], na.rm = TRUE) / 158
+    
+    # Append the result to the data frame
+    crime_type_averages <-
+      rbind(
+        crime_type_averages,
+        data.frame(
+          Crime_Type = crime_type,
+          Year = year,
+          Average = average_value
+        )
+      )
+  }
+}
+write_csv(crime_type_averages, "outputs/data/crime_type_averages.csv")
+
+
+
+# Aggregating Neighbourhood statistics
+crime_data_cleaned <- crime_data %>%
+  select(-starts_with("POPULATION_"), -ends_with("RATE_"), -geometry) %>%
+  pivot_longer(cols = starts_with(
+    c(
+      "ASSAULT_",
+      "AUTOTHEFT_",
+      "BIKETHEFT_",
+      "BREAKENTER_",
+      "HOMICIDE_",
+      "ROBBERY_",
+      "SHOOTING_",
+      "THEFTFROMMV_",
+      "THEFTOVER_"
+    )
+  ),
+  names_to = "Crime_Type_Year",
+  values_to = "Count") %>%
+  separate(Crime_Type_Year,
+           into = c("Crime_Type", "Year"),
+           sep = "_") %>%
+  group_by(AREA_NAME, Crime_Type) %>%
+  summarize(Total_Count = sum(Count, na.rm = TRUE))
+
+# Save as a new file
+write_csv(crime_data_cleaned,
+          "outputs/data/crime_data_cleaned_neighbourhood.csv")
