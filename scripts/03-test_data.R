@@ -22,7 +22,7 @@ if (any(is.na(crime_data_cleaned))) {
   warning("Missing values found in cleaned data")
 }
 
-# test thatdata is valid
+# test that data is valid
 if (any(crime_data_cleaned$Total_Count < 0)) {
   stop("Invalid total counts in the summarized data")
 }

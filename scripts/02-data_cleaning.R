@@ -9,6 +9,7 @@
 #### Workspace setup ####
 library(tidyverse)
 
+#Read raw crime data
 crime_data <-
   read_csv(here::here("inputs/data/unedited_crime_data.csv"))
 
@@ -16,7 +17,6 @@ crime_data <-
 #### Cleaning Crime data ####
 
 ## Get yearly Average for all areas per crime type
-
 # vector of years
 years <-
   c("2014",
@@ -53,7 +53,7 @@ for (year in years) {
     average_value <-
       sum(raw_crime_data[, column_name], na.rm = TRUE) / 158
     
-    # Append the result to the data frame
+    # Adding the result to the data frame
     crime_type_averages <-
       rbind(
         crime_type_averages,
@@ -65,6 +65,8 @@ for (year in years) {
       )
   }
 }
+
+#Saving data frame as a csv file
 write_csv(crime_type_averages, "outputs/data/crime_type_averages.csv")
 
 
@@ -93,6 +95,6 @@ crime_data_cleaned <- crime_data %>%
   group_by(AREA_NAME, Crime_Type) %>%
   summarize(Total_Count = sum(Count, na.rm = TRUE))
 
-# Save as a new file
+# Saving as a new file
 write_csv(crime_data_cleaned,
           "outputs/data/crime_data_cleaned_neighbourhood.csv")
